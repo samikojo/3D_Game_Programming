@@ -11,6 +11,9 @@ namespace GameProgramming3D
 		public static Color DeadColor = Color.red;
 		public const float GRAVITY = 9.81f;
 
+		public static event System.Action< Unit > UnitSelected;
+		public static event System.Action< Unit > UnitDied;
+
 		[SerializeField]
 		private float _speed;
 
@@ -59,6 +62,13 @@ namespace GameProgramming3D
 		public void Select( bool isSelected )
 		{
 			Renderer.material.color = isSelected ? SelectedColor : NormalColor;
+			if ( isSelected )
+			{
+				if ( UnitSelected != null )
+				{
+					UnitSelected( this );
+				}
+			}
 		}
 
 		public void TakeDamage()
@@ -87,6 +97,11 @@ namespace GameProgramming3D
 			if ( collider != null )
 			{
 				collider.enabled = false;
+			}
+
+			if ( UnitDied != null )
+			{
+				UnitDied( this );
 			}
 		}
 	}

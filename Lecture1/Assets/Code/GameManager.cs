@@ -4,6 +4,27 @@ namespace GameProgramming3D
 {
 	public class GameManager : MonoBehaviour
 	{
+		private static GameManager _instance;
+
+		public static GameManager Instance
+		{
+			get
+			{
+				if ( _instance == null )
+				{
+					var go = new GameObject("GameManager");
+					_instance = go.AddComponent< GameManager >();
+					_instance.Init();
+				}
+				return _instance;
+			}
+		}
+
+		private void Init()
+		{
+			AllUnits = FindObjectsOfType<Unit> ();
+		}
+
 		private Unit _selectedUnit;
 
 		public Unit SelectedUnit
@@ -23,11 +44,38 @@ namespace GameProgramming3D
 			}
 		}
 
+		private GUIManager _guiManager;
+
+		public GUIManager GUIManager
+		{
+			get
+			{
+				if ( _guiManager == null )
+				{
+					_guiManager = FindObjectOfType< GUIManager >();
+					if ( _guiManager == null )
+					{
+						var guiManagerGo = new GameObject("GUIManager");
+						_guiManager = guiManagerGo.AddComponent< GUIManager >();
+					}
+				}
+				return _guiManager;
+			}
+		}
+
 		public Unit[] AllUnits { get; private set; }
 
 		protected void Awake()
 		{
-			AllUnits = FindObjectsOfType< Unit >();
+			if ( _instance == null )
+			{
+				_instance = this;
+				Init ();
+			}
+			else if ( _instance != this )
+			{
+				Destroy( this );
+			}
 		}
 
 		protected void Update()
