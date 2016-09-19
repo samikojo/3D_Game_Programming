@@ -24,6 +24,7 @@ namespace GameProgramming3D
 
 		public CharacterController Controller { get; protected set; }
 		protected Vector3 MovementVector { get; private set; }
+		public Player AssociatedPlayer { get; protected set; }
 
 		protected virtual float Gravity
 		{
@@ -59,15 +60,25 @@ namespace GameProgramming3D
 			MovementVector = Vector3.zero;
 		}
 
-		public void Select( bool isSelected )
+		public virtual void Select( bool isSelected )
 		{
 			Renderer.material.color = isSelected ? SelectedColor : NormalColor;
 			if ( isSelected )
 			{
-				if ( UnitSelected != null )
-				{
-					UnitSelected( this );
-				}
+				OnUnitSelected();
+			}
+		}
+
+		public virtual void Init( Player player )
+		{
+			AssociatedPlayer = player;
+		}
+
+		protected void OnUnitSelected()
+		{
+			if ( UnitSelected != null )
+			{
+				UnitSelected ( this );
 			}
 		}
 

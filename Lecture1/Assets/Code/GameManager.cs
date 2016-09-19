@@ -20,9 +20,40 @@ namespace GameProgramming3D
 			}
 		}
 
+		private int _playerIndex = -1;
+
+		[Tooltip( "How much time player has to complete their turn (in seconds)." )]
+		[SerializeField] private float _turnTime; // In seconds.
+
+		private CountdownTimer _turnTimer;
+
+		public CountdownTimer TurnTimer
+		{
+			get
+			{
+				if ( _turnTimer == null )
+				{
+					_turnTimer = gameObject.GetOrAddComponent< CountdownTimer >();
+					_turnTimer.SetTime( _turnTime );
+					_turnTimer.TimerFinished += HandleTimerFinished;
+				}
+				return _turnTimer;
+			}
+		}
+
+		private void HandleTimerFinished()
+		{
+			
+		}
+
 		private void Init()
 		{
 			AllUnits = FindObjectsOfType<Unit> ();
+			AllPlayers = FindObjectsOfType< Player >();
+			for ( int i = 0; i < AllPlayers.Length; ++i )
+			{
+				AllPlayers[i].Init();
+			}
 		}
 
 		private Unit _selectedUnit;
@@ -30,7 +61,24 @@ namespace GameProgramming3D
 		public Unit SelectedUnit
 		{
 			get { return _selectedUnit; }
-			private set
+			set {
+				SelectUnit( value );
+			}
+		}
+
+		public Player ActivePlayer
+		{
+			get
+			{
+				return _playerIndex >= 0 && _playerIndex < AllPlayers.Length 
+					? AllPlayers[ _playerIndex ] 
+					: null;
+			}
+		}
+
+		private void SelectUnit( Unit value )
+		{
+			if ( value == null || value.AssociatedPlayer == ActivePlayer )
 			{
 				if ( _selectedUnit != null )
 				{
@@ -64,6 +112,7 @@ namespace GameProgramming3D
 		}
 
 		public Unit[] AllUnits { get; private set; }
+		public Player[] AllPlayers { get; private set; }
 
 		protected void Awake()
 		{
@@ -113,5 +162,10 @@ namespace GameProgramming3D
 				SelectedUnit.Move();
 			}
 		} // Update
+
+		protected void OnDestroy()
+		{
+			TurnTimer.TimerFinished -= HandleTimerFinished;
+		}
 	}
 }
