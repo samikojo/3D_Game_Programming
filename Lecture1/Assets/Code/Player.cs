@@ -33,6 +33,7 @@ namespace GameProgramming3D
 			{
 				_unitIndex = 0;
 			}
+			GameManager.Instance.SelectedUnit = UnitInTurn;
 		}
 	}
 }

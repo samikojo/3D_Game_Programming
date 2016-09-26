@@ -25,6 +25,7 @@ namespace GameProgramming3D
 		public event System.Action<Player> TurnChanged;
 
 		private int _playerIndex = -1;
+		private InputManager _inputManager;
 
 		[Tooltip( "How much time player has to complete their turn (in seconds)." )]
 		[SerializeField] private float _turnTime; // In seconds.
@@ -59,7 +60,18 @@ namespace GameProgramming3D
 				AllPlayers[i].Init();
 			}
 
+			InitInputManager ();
 			StartGame ();
+		}
+
+		private void InitInputManager()
+		{
+			_inputManager = FindObjectOfType<InputManager> ();
+			if(_inputManager == null)
+			{
+				_inputManager = gameObject.GetOrAddComponent<InputManager> ();
+			}
+			_inputManager.Init ();
 		}
 
 		private Unit _selectedUnit;
@@ -132,42 +144,6 @@ namespace GameProgramming3D
 				Destroy( this );
 			}
 		}
-
-		protected void Update()
-		{
-			if ( Input.GetMouseButtonDown( 0 ) )
-			{
-				var ray = Camera.main.ScreenPointToRay( Input.mousePosition );
-				RaycastHit hit;
-				if ( Physics.Raycast( ray, out hit, 50 ) )
-				{
-					var unit = hit.collider.GetComponent< Unit >();
-					if ( unit != null )
-					{
-						SelectedUnit = unit;
-					}
-				}
-			}
-
-			if ( Input.GetMouseButtonDown( 1 ) )
-			{
-				var ray = Camera.main.ScreenPointToRay( Input.mousePosition );
-				RaycastHit hit;
-				if ( Physics.Raycast( ray, out hit, 50 ) )
-				{
-					var damageReceiver = hit.collider.GetComponent< IDamageReceiver >();
-					if ( damageReceiver != null )
-					{
-						damageReceiver.TakeDamage();
-					}
-				}
-			}
-
-			if ( SelectedUnit != null )
-			{
-				SelectedUnit.Move();
-			}
-		} // Update
 
 		protected void OnDisable()
 		{

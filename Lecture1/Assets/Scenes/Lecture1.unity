@@ -180,6 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 10
   _health: 10
+  _rotationSpeed: 0
 --- !u!1 &186667372
 GameObject:
   m_ObjectHideFlags: 0
@@ -553,10 +554,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 443926, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -181.29999
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}
   m_IsPrefabParent: 0
@@ -806,6 +803,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 5
   _health: 10
+  _rotationSpeed: 0
   _jumpTime: 0.25
 --- !u!143 &1145232436
 CharacterController:
@@ -1078,6 +1076,26 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 443926, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}
       propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 432734, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 432734, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0.00000032584137
+      objectReference: {fileID: 0}
+    - target: {fileID: 432734, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 432734, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 432734, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

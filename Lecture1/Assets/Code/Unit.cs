@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace GameProgramming3D
 {
@@ -14,16 +15,15 @@ namespace GameProgramming3D
 		public static event System.Action< Unit > UnitSelected;
 		public static event System.Action< Unit > UnitDied;
 
-		[SerializeField]
-		private float _speed;
-
-		[SerializeField]
-		private int _health = 10;
+		[SerializeField] private float _speed;
+		[SerializeField] private int _health = 10;
+		[SerializeField] private float _rotationSpeed;
 
 		private Renderer _renderer;
 
-		public CharacterController Controller { get; protected set; }
-		protected Vector3 MovementVector { get; private set; }
+		protected Vector3 MovementVector { get; set; }
+		protected float MoveAmount { get; set; }
+		protected float RotationAmount { get; set; }
 		public Player AssociatedPlayer { get; protected set; }
 
 		protected virtual float Gravity
@@ -45,20 +45,15 @@ namespace GameProgramming3D
 
 		protected virtual void Awake()
 		{
-			Controller = gameObject.GetOrAddComponent< CharacterController >();
+			
 		}
 
 		protected void Update()
 		{
-			float y = MovementVector.y;
-			y -= Gravity * Time.deltaTime; // y = y - 9.81f;
-			MovementVector = new Vector3(MovementVector.x, y, MovementVector.z);
-			if ( Controller.enabled )
-			{
-				Controller.Move( MovementVector );
-			}
-			MovementVector = Vector3.zero;
+			UpdateMovement ();
 		}
+
+		protected abstract void UpdateMovement ();
 
 		public virtual void Select( bool isSelected )
 		{
@@ -82,23 +77,27 @@ namespace GameProgramming3D
 			}
 		}
 
-		public void TakeDamage()
+		public void TakeDamage(float amount)
 		{
-			_health = Mathf.Max( 0, _health - 1 );
+			_health = Mathf.Max( 0, _health - Mathf.RoundToInt( amount ) );
 			if ( _health == 0 )
 			{
 				Die();
 			}
 		}
 
-		public virtual void Move()
+		public virtual void Move( float input )
 		{
-			var horizontal = Input.GetAxis( "Horizontal" );
-			var vertical = Input.GetAxis( "Vertical" );
-			var x = horizontal * _speed * Time.deltaTime;
-			var y = 0;
-			var z = vertical * _speed * Time.deltaTime;
+			MoveAmount = input * _speed * Time.deltaTime;
+			var x = MovementVector.x;
+			var y = MovementVector.y;
+			var z = MoveAmount;
 			MovementVector = new Vector3(x, y, z);
+		}
+
+		public virtual void Turn(float amount)
+		{
+			RotationAmount = amount * _rotationSpeed * Time.deltaTime;
 		}
 
 		public virtual void Die()
@@ -110,10 +109,39 @@ namespace GameProgramming3D
 				collider.enabled = false;
 			}
 
+			OnUnitDied ();
+		}
+
+		protected void OnUnitDied()
+		{
 			if ( UnitDied != null )
 			{
-				UnitDied( this );
+				UnitDied ( this );
 			}
+		}
+
+		protected void ResetMovement()
+		{
+			RotationAmount = 0;
+			MoveAmount = 0;
+			MovementVector = Vector3.zero;
+		}
+
+		public void ApplyExplosionForce ( float force, Vector3 position, float radius )
+		{
+			if ( _health > 0 )
+			{
+				var rigidbody = GetComponent<Rigidbody> ();
+				if ( rigidbody != null )
+				{
+					rigidbody.AddExplosionForce ( force, position, radius );
+				}
+			}
+		}
+
+		public virtual void Shoot()
+		{
+
 		}
 	}
 }

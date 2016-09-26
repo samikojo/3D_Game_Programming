@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 namespace GameProgramming3D
 {
@@ -9,6 +10,8 @@ namespace GameProgramming3D
 		private float _jumpTime;
 
 		private bool _isJumping = false;
+
+		public CharacterController Controller { get; protected set; }
 
 		protected override float Gravity
 		{
@@ -21,15 +24,24 @@ namespace GameProgramming3D
 			}
 		}
 
-		public override void Move()
+		protected override void Awake ()
 		{
-			base.Move();
+			base.Awake ();
 
-			var jump = Input.GetAxis( "Jump" );
-			if ( Controller.isGrounded && jump > 0 )
+			Controller = gameObject.GetOrAddComponent<CharacterController> ();
+		}
+
+		protected override void UpdateMovement ()
+		{
+			float y = MovementVector.y;
+			y -= Gravity * Time.deltaTime; // y = y - 9.81f;
+			MovementVector = new Vector3 ( MovementVector.x, y, MovementVector.z );
+			if ( Controller.enabled )
 			{
-				StartCoroutine( Jump() );
+				Controller.Move ( MovementVector );
 			}
+
+			ResetMovement ();
 		}
 
 		private IEnumerator Jump()
