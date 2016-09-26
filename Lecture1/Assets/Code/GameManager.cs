@@ -4,6 +4,7 @@ namespace GameProgramming3D
 {
 	public class GameManager : MonoBehaviour
 	{
+		#region Statics
 		private static GameManager _instance;
 
 		public static GameManager Instance
@@ -19,6 +20,9 @@ namespace GameProgramming3D
 				return _instance;
 			}
 		}
+		#endregion
+
+		public event System.Action<Player> TurnChanged;
 
 		private int _playerIndex = -1;
 
@@ -43,7 +47,7 @@ namespace GameProgramming3D
 
 		private void HandleTimerFinished()
 		{
-			
+			ChangeTurn ();
 		}
 
 		private void Init()
@@ -54,6 +58,8 @@ namespace GameProgramming3D
 			{
 				AllPlayers[i].Init();
 			}
+
+			StartGame ();
 		}
 
 		private Unit _selectedUnit;
@@ -163,9 +169,36 @@ namespace GameProgramming3D
 			}
 		} // Update
 
-		protected void OnDestroy()
+		protected void OnDisable()
 		{
 			TurnTimer.TimerFinished -= HandleTimerFinished;
+		}
+
+		public void StartGame()
+		{
+			ChangeTurn ();
+		}
+
+		public void ChangeTurn()
+		{
+			_playerIndex++;
+			if(_playerIndex >= AllPlayers.Length)
+			{
+				_playerIndex = 0;
+			}
+			ActivePlayer.StartTurn ();
+			TurnTimer.Stop ();
+			TurnTimer.Reset ();
+			TurnTimer.StartTimer ();
+			OnTurnChanged ();
+		}
+
+		protected void OnTurnChanged()
+		{
+			if(TurnChanged != null)
+			{
+				TurnChanged ( ActivePlayer );
+			}
 		}
 	}
 }
