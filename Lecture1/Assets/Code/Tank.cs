@@ -48,6 +48,9 @@ namespace GameProgramming3D
 
 		public override void Die ()
 		{
+			IsAlive = false;
+			gameObject.SetActive( false );
+			AssociatedPlayer.UnitKilled();
 			OnUnitDied ();
 		}
 

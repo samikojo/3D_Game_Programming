@@ -1,3 +1,5 @@
+using System;
+using GameProgramming3D.State;
 using UnityEngine;
 
 namespace GameProgramming3D
@@ -23,6 +25,7 @@ namespace GameProgramming3D
 		#endregion
 
 		public event System.Action<Player> TurnChanged;
+		public event System.Action< int > LevelLoaded;
 
 		private int _playerIndex = -1;
 		private InputManager _inputManager;
@@ -46,6 +49,19 @@ namespace GameProgramming3D
 			}
 		}
 
+		public void PlayerLost ()
+		{
+			EndGame();
+		}
+
+		private void EndGame ()
+		{
+			TurnTimer.Stop();
+			StateManager.PerformTransition( TransitionType.GameToGameOver );
+		}
+
+		public GameStateManager StateManager { get; private set; }
+
 		private void HandleTimerFinished()
 		{
 			ChangeTurn ();
@@ -53,15 +69,16 @@ namespace GameProgramming3D
 
 		private void Init()
 		{
-			AllUnits = FindObjectsOfType<Unit> ();
-			AllPlayers = FindObjectsOfType< Player >();
-			for ( int i = 0; i < AllPlayers.Length; ++i )
-			{
-				AllPlayers[i].Init();
-			}
-
+			DontDestroyOnLoad( gameObject );
+			InitGameStateManager ();
 			InitInputManager ();
-			StartGame ();
+		}
+
+		private void InitGameStateManager ()
+		{
+			StateManager = new GameStateManager( new MenuState() );
+			StateManager.AddState( new GameState() );
+			StateManager.AddState( new GameOverState() );
 		}
 
 		private void InitInputManager()
@@ -141,8 +158,13 @@ namespace GameProgramming3D
 			}
 			else if ( _instance != this )
 			{
-				Destroy( this );
+				Destroy ( this );
 			}
+		}
+
+		protected void OnLevelWasLoaded(int index)
+		{
+			OnLevelLoaded( index );
 		}
 
 		protected void OnDisable()
@@ -150,8 +172,23 @@ namespace GameProgramming3D
 			TurnTimer.TimerFinished -= HandleTimerFinished;
 		}
 
+		protected void OnLevelLoaded( int index )
+		{
+			if ( LevelLoaded != null )
+			{
+				LevelLoaded( index );
+			}
+		}
+
 		public void StartGame()
 		{
+			AllPlayers = FindObjectsOfType<Player> ();
+			for ( int i = 0; i < AllPlayers.Length; ++i )
+			{
+				AllPlayers[i].Init ();
+			}
+			AllUnits = FindObjectsOfType<Unit> ();
+
 			ChangeTurn ();
 		}
 

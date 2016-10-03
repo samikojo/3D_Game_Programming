@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 namespace GameProgramming3D
 {
@@ -34,6 +35,23 @@ namespace GameProgramming3D
 				_unitIndex = 0;
 			}
 			GameManager.Instance.SelectedUnit = UnitInTurn;
+		}
+
+		public void UnitKilled ()
+		{
+			bool anyUnitsAlive = false;
+			foreach ( var unit in _units )
+			{
+				if ( unit.IsAlive )
+				{
+					anyUnitsAlive = true;
+				}
+			}
+
+			if ( !anyUnitsAlive )
+			{
+				GameManager.Instance.PlayerLost();
+			}
 		}
 	}
 }

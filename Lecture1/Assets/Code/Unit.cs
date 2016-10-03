@@ -25,6 +25,7 @@ namespace GameProgramming3D
 		protected float MoveAmount { get; set; }
 		protected float RotationAmount { get; set; }
 		public Player AssociatedPlayer { get; protected set; }
+		public bool IsAlive { get; protected set; }
 
 		protected virtual float Gravity
 		{
@@ -66,6 +67,7 @@ namespace GameProgramming3D
 
 		public virtual void Init( Player player )
 		{
+			IsAlive = true;
 			AssociatedPlayer = player;
 		}
 
