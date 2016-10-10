@@ -1,6 +1,5 @@
 using UnityEngine;
-using System.Collections;
-using System;
+using System.Collections.Generic;
 
 namespace GameProgramming3D
 {
@@ -8,6 +7,10 @@ namespace GameProgramming3D
 	{
 		private Unit[] _units;
 		private int _unitIndex = -1;
+
+		[SerializeField] private int _id;
+
+		public int Id { get { return _id; } }
 
 		public Unit UnitInTurn
 		{
@@ -25,6 +28,27 @@ namespace GameProgramming3D
 			{
 				_units[i].Init ( this );
 			}
+
+			if ( !CheckUnitIds() )
+			{
+				Debug.LogError( 
+					string.Format( "Player {0}: There are invalid unit ids!", Id ) );
+				Debug.Break();
+			}
+		}
+
+		private bool CheckUnitIds()
+		{
+			HashSet<int> unitIds = new HashSet< int >();
+			foreach ( Unit unit in _units )
+			{
+				if ( !unitIds.Add( unit.Id ) )
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 	
 		public void StartTurn()

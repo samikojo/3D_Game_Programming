@@ -181,6 +181,7 @@ MonoBehaviour:
   _speed: 10
   _health: 10
   _rotationSpeed: 0
+  _id: 0
 --- !u!1 &186667372
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,6 +604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0d598b5795531d41a926e59f46a6326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _id: 0
 --- !u!1 &935334898
 GameObject:
   m_ObjectHideFlags: 0
@@ -721,6 +723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0d598b5795531d41a926e59f46a6326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _id: 1
 --- !u!1001 &1115854059
 Prefab:
   m_ObjectHideFlags: 0
@@ -764,6 +767,10 @@ Prefab:
       propertyPath: m_Name
       value: Toon Tank (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 11426638, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}
+      propertyPath: _id
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}
   m_IsPrefabParent: 0
@@ -804,6 +811,7 @@ MonoBehaviour:
   _speed: 5
   _health: 10
   _rotationSpeed: 0
+  _id: 0
   _jumpTime: 0.25
 --- !u!143 &1145232436
 CharacterController:
@@ -1031,6 +1039,10 @@ Prefab:
     - target: {fileID: 443926, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
       value: -181.29999
+      objectReference: {fileID: 0}
+    - target: {fileID: 11426638, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}
+      propertyPath: _id
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 96a984cc8be371842b02bc0c6214f4b8, type: 2}

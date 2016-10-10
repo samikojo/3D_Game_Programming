@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GameProgramming3D.State;
 using UnityEngine;
 
@@ -187,6 +188,13 @@ namespace GameProgramming3D
 			{
 				AllPlayers[i].Init ();
 			}
+
+			if ( !CheckPlayerIds() )
+			{
+				Debug.LogError( "GameManager: Players doesn't have unique ids!" );
+				Debug.Break();
+			}
+
 			AllUnits = FindObjectsOfType<Unit> ();
 
 			ChangeTurn ();
@@ -212,6 +220,20 @@ namespace GameProgramming3D
 			{
 				TurnChanged ( ActivePlayer );
 			}
+		}
+
+		private bool CheckPlayerIds ()
+		{
+			HashSet<int> playerIds = new HashSet<int> ();
+			foreach ( Player player in AllPlayers )
+			{
+				if ( !playerIds.Add ( player.Id ) )
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 	}
 }

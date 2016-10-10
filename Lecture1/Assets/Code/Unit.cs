@@ -18,14 +18,32 @@ namespace GameProgramming3D
 		[SerializeField] private float _speed;
 		[SerializeField] private int _health = 10;
 		[SerializeField] private float _rotationSpeed;
+		[SerializeField] private int _id;
 
 		private Renderer _renderer;
 
+		/// <summary>
+		/// Returns the unique id of the unit.
+		/// </summary>
+		public int Id { get { return _id; } }
 		protected Vector3 MovementVector { get; set; }
 		protected float MoveAmount { get; set; }
 		protected float RotationAmount { get; set; }
 		public Player AssociatedPlayer { get; protected set; }
 		public bool IsAlive { get; protected set; }
+
+		public int Health
+		{
+			get { return _health; }
+			set
+			{
+				_health = value;
+				if ( _health <= 0 )
+				{
+					gameObject.SetActive( false );
+				}
+			}
+		}
 
 		protected virtual float Gravity
 		{
