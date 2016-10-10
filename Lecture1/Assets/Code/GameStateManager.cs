@@ -22,6 +22,12 @@ namespace GameProgramming3D.State
 
 	public class GameStateManager
 	{
+		#region Delegates and events
+		public delegate void GameStateChangedDelegate( StateType type );
+
+		public event GameStateChangedDelegate GameStateChanged;
+		#endregion Delegates and events
+
 		private List<StateBase> _states = new List< StateBase >(); 
 
 		public StateBase CurrentState { get; private set; }
@@ -94,6 +100,14 @@ namespace GameProgramming3D.State
 					CurrentState = stateBase;
 					CurrentState.StateActivated();
 				}
+			}
+		}
+
+		public void RaiseGameStateChangedEvent( StateType type )
+		{
+			if ( GameStateChanged != null )
+			{
+				GameStateChanged( type );
 			}
 		}
 	}

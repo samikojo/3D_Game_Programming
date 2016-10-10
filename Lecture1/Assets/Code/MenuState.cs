@@ -13,7 +13,7 @@ namespace GameProgramming3D.State
 		// Called when state is activated.
 		public override void StateActivated()
 		{
-			SceneManager.LoadScene( 0 );
+			LoadScene( 0 );
 		}
 	}
 }

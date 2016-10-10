@@ -14,14 +14,7 @@ namespace GameProgramming3D.State
 
 		public override void StateActivated()
 		{
-			GameManager.Instance.LevelLoaded += HandleLevelLoaded;
-			SceneManager.LoadScene( 1 );
-		}
-
-		private void HandleLevelLoaded ( int index )
-		{
-			GameManager.Instance.LevelLoaded -= HandleLevelLoaded;
-			GameManager.Instance.StartGame();
+			LoadScene( 1 );
 		}
 	}
 }

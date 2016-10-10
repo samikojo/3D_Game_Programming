@@ -13,7 +13,7 @@ namespace GameProgramming3D.State
 
 		public override void StateActivated()
 		{
-			SceneManager.LoadScene( 2 );
+			LoadScene( 2 );
 		}
 	}
 }

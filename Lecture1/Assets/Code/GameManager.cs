@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GameProgramming3D.SaveLoad;
 using GameProgramming3D.State;
 using UnityEngine;
 
@@ -183,21 +184,83 @@ namespace GameProgramming3D
 
 		public void StartGame()
 		{
+			StateManager.GameStateChanged += GameStarted;
+			StateManager.PerformTransition ( TransitionType.MenuToGame );
+		}
+
+		public void LoadGame()
+		{
+			StateManager.GameStateChanged += GameLoaded;
+			StateManager.PerformTransition ( TransitionType.MenuToGame );
+		}
+
+		private void GameStarted( StateType state )
+		{
+			StateManager.GameStateChanged -= GameStarted;
+			InitPlayers ();
+			ChangeTurn ();
+		}
+
+		private void GameLoaded(StateType state)
+		{
+			StateManager.GameStateChanged -= GameLoaded;
+
+			InitPlayers ();
+			LoadGameData ();
+			SelectedUnit = ActivePlayer.UnitInTurn;
+			TurnTimer.StartTimer ();
+		}
+
+		private void LoadGameData()
+		{
+			GameData data = SaveSystem.Load<GameData> ();
+			Player activePlayer = GetPlayerById ( data.ActivePlayer );
+			_playerIndex = Array.IndexOf ( AllPlayers, activePlayer );
+
+			TurnTimer.CurrentTime = data.CurrentTime;
+
+			foreach ( Player player in AllPlayers )
+			{
+				player.SetActiveUnit ( data.Turns[player.Id] );
+			}
+
+			foreach(UnitData unitData in data.UnitDatas)
+			{
+				Player player = GetPlayerById ( unitData.PlayerId );
+				Unit unit = player.GetUnitById ( unitData.Id );
+				unit.SetUnit ( unitData );
+			}
+		}
+
+		private Player GetPlayerById(int id)
+		{
+			Player player = null;
+			foreach (Player p in AllPlayers)
+			{
+				if(p.Id == id)
+				{
+					player = p;
+				}
+			}
+
+			return player;
+		}
+
+		private void InitPlayers ()
+		{
 			AllPlayers = FindObjectsOfType<Player> ();
 			for ( int i = 0; i < AllPlayers.Length; ++i )
 			{
 				AllPlayers[i].Init ();
 			}
 
-			if ( !CheckPlayerIds() )
+			if ( !CheckPlayerIds () )
 			{
-				Debug.LogError( "GameManager: Players doesn't have unique ids!" );
-				Debug.Break();
+				Debug.LogError ( "GameManager: Players doesn't have unique ids!" );
+				Debug.Break ();
 			}
 
 			AllUnits = FindObjectsOfType<Unit> ();
-
-			ChangeTurn ();
 		}
 
 		public void ChangeTurn()
@@ -212,6 +275,31 @@ namespace GameProgramming3D
 			TurnTimer.Reset ();
 			TurnTimer.StartTimer ();
 			OnTurnChanged ();
+		}
+
+		public void SaveGame()
+		{
+			GameData data = new GameData();
+			data.ActivePlayer = ActivePlayer.Id;
+			data.CurrentTime = TurnTimer.CurrentTime;
+
+			foreach ( var player in AllPlayers )
+			{
+				int unitId = -1;
+				if ( player.UnitInTurn != null )
+				{
+					unitId = player.UnitInTurn.Id;
+				}
+
+				data.Turns.Add( player.Id, unitId );
+			}
+
+			foreach ( var unit in AllUnits )
+			{
+				data.UnitDatas.Add( new UnitData( unit ) );
+			}
+
+			SaveSystem.Save( data );
 		}
 
 		protected void OnTurnChanged()

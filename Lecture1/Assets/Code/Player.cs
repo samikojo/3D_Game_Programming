@@ -77,5 +77,34 @@ namespace GameProgramming3D
 				GameManager.Instance.PlayerLost();
 			}
 		}
+
+		public void SetActiveUnit(int unitId)
+		{
+			_unitIndex = GetUnitIndex ( unitId );
+		}
+
+		private int GetUnitIndex(int unitId)
+		{
+			Unit unit = GetUnitById ( unitId );
+			if(unit == null)
+			{
+				return -1;
+			}
+			return System.Array.IndexOf ( _units, unit );
+		}
+
+		public Unit GetUnitById(int unitId)
+		{
+			Unit unit = null;
+			foreach (Unit u in _units)
+			{
+				if(u.Id == unitId)
+				{
+					unit = u;
+				}
+			}
+
+			return unit;
+		}
 	}
 }

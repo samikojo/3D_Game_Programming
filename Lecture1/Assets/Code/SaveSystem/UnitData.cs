@@ -6,11 +6,16 @@ namespace GameProgramming3D.SaveLoad
 	[Serializable]
 	public class UnitData
 	{
+		// Id of the unit
 		public int Id;
+		// Id of the player which owns the unit
 		public int PlayerId;
+		// Health of the unit
 		public int Health;
-		public Vector3 Position;
-		public Vector3 Rotation;
+		// Position of the unit
+		public SerializableVector3 Position;
+		// Rotation of the unit
+		public SerializableVector3 Rotation;
 
 		public UnitData( Unit unit )
 		{

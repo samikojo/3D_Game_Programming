@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 namespace GameProgramming3D.State
 {
@@ -49,6 +50,18 @@ namespace GameProgramming3D.State
 
 		public virtual void StateDeactivating()
 		{
+		}
+
+		public void LoadScene( int index )
+		{
+			GameManager.Instance.LevelLoaded += HandleLevelLoaded;
+			SceneManager.LoadScene( index );
+		}
+
+		private void HandleLevelLoaded ( int levelIndex )
+		{
+			GameManager.Instance.LevelLoaded -= HandleLevelLoaded;
+			GameManager.Instance.StateManager.RaiseGameStateChangedEvent( State );
 		}
 	}
 }

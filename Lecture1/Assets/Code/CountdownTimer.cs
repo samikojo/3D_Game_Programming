@@ -7,7 +7,7 @@ namespace GameProgramming3D
 	{
 		public event System.Action TimerFinished;
 
-		public float CurrentTime { get; private set; }
+		public float CurrentTime { get; set; }
 		public float InitialTime { get; private set; }
 
 		private bool _isRunning = false;

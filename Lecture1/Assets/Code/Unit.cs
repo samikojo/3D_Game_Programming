@@ -1,4 +1,5 @@
 using UnityEngine;
+using GameProgramming3D.SaveLoad;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -162,6 +163,13 @@ namespace GameProgramming3D
 		public virtual void Shoot()
 		{
 
+		}
+
+		public void SetUnit(UnitData unitData)
+		{
+			Health = unitData.Health;
+			transform.position = (Vector3)unitData.Position;
+			transform.eulerAngles = (Vector3)unitData.Rotation;
 		}
 	}
 }

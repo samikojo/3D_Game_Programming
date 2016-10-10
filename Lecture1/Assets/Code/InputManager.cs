@@ -15,6 +15,7 @@ namespace GameProgramming3D
 		private UnitCommand _bButtonCommand;
 		private UnitCommand _xButtonCommand;
 		private UnitCommand _yButtonCommand;
+		private CommandBase _rKeyCommand;
 
 		public void Init()
 		{
@@ -31,11 +32,14 @@ namespace GameProgramming3D
 			_aButtonCommand = new ShootUnitCommand();
 			_yButtonCommand = new MoveBarrelCommand();
 			_bButtonCommand = new MoveBarrelCommand();
+			_rKeyCommand = new SaveGameCommand ();
 		}
 
 		protected void Update()
 		{
 			var unit = GameManager.Instance.SelectedUnit;
+
+			HandleKeyDown ( KeyCode.R, _rKeyCommand );
 
 			HandleUnitCommands ( unit );
 		}
@@ -86,6 +90,14 @@ namespace GameProgramming3D
 			if(isKeyDown && command != null)
 			{
 				command.Execute ( unit, amount );
+			}
+		}
+
+		private void HandleKeyDown(KeyCode keyCode, CommandBase command)
+		{
+			if(Input.GetKeyDown(keyCode))
+			{
+				command.Execute ();
 			}
 		}
 
