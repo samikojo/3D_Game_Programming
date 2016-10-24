@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using GameProgramming3D.SaveLoad;
 using GameProgramming3D.State;
+using GameProgramming3D.GUI;
 using UnityEngine;
 
 namespace GameProgramming3D
@@ -32,8 +33,27 @@ namespace GameProgramming3D
 		private int _playerIndex = -1;
 		private InputManager _inputManager;
 
+		[SerializeField]
+		private GUIManager _guiManagerPrefab;
+
+		private GUIManager _guiManager;
+
 		[Tooltip( "How much time player has to complete their turn (in seconds)." )]
 		[SerializeField] private float _turnTime; // In seconds.
+
+		public GUIManager GUIManager
+		{
+			get
+			{
+				if(_guiManager == null)
+				{
+					_guiManager = Instantiate ( _guiManagerPrefab );
+					_guiManager.transform.SetParent ( transform );
+				}
+
+				return _guiManager;
+			}
+		}
 
 		private CountdownTimer _turnTimer;
 
@@ -129,25 +149,6 @@ namespace GameProgramming3D
 			}
 		}
 
-		private GUIManager _guiManager;
-
-		public GUIManager GUIManager
-		{
-			get
-			{
-				if ( _guiManager == null )
-				{
-					_guiManager = FindObjectOfType< GUIManager >();
-					if ( _guiManager == null )
-					{
-						var guiManagerGo = new GameObject("GUIManager");
-						_guiManager = guiManagerGo.AddComponent< GUIManager >();
-					}
-				}
-				return _guiManager;
-			}
-		}
-
 		public Unit[] AllUnits { get; private set; }
 		public Player[] AllPlayers { get; private set; }
 
@@ -160,6 +161,7 @@ namespace GameProgramming3D
 			}
 			else if ( _instance != this )
 			{
+				Debug.Log ( "GameManager destroyed" );
 				Destroy ( this );
 			}
 		}
@@ -182,10 +184,10 @@ namespace GameProgramming3D
 			}
 		}
 
-		public void StartGame()
+		public void StartGame(TransitionType transition)
 		{
 			StateManager.GameStateChanged += GameStarted;
-			StateManager.PerformTransition ( TransitionType.MenuToGame );
+			StateManager.PerformTransition ( transition );
 		}
 
 		public void LoadGame()
@@ -322,6 +324,20 @@ namespace GameProgramming3D
 			}
 
 			return true;
+		}
+
+		public void PauseGame()
+		{
+			Time.timeScale = 0;
+
+			Dialog dialog = GUIManager.CreateDialog ();
+			dialog.SetHeadline ( "Game paused" );
+			dialog.SetText ( "Continue game by pressing Continue" );
+			dialog.SetShowCancel ( false );
+			dialog.SetOnOKClicked ( () => Time.timeScale = 1 );
+			dialog.SetOKButtonText ( "Continue" );
+
+			dialog.Show ();
 		}
 	}
 }

@@ -1,14 +1,13 @@
 using UnityEngine;
-using System.Collections;
 using GameProgramming3D.State;
 
 namespace GameProgramming3D.GUI
 {
-	public class GameOverGUI : MonoBehaviour
+	public class GameOverGUI : SceneGUI
 	{
 		public void OnRestartGamePressed()
 		{
-			GameManager.Instance.StateManager.PerformTransition( TransitionType.GameOverToGame );
+			GameManager.Instance.StartGame (TransitionType.GameOverToGame);
 		}
 
 		public void OnToMainMenuPressed()

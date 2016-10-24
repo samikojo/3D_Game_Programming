@@ -1,13 +1,13 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class FxSplash : MonoBehaviour {
-	private Rigidbody rb;
+	//private Rigidbody rb;
 	public ParticleSystem Ps_Splash;
 	public ParticleSystem Ps_Trail;
 	
 	void Start() {
-		rb = this.GetComponent<Rigidbody>();
+		//rb = this.GetComponent<Rigidbody>();
 		mh = this.GetComponent<MeshRenderer>();
 	}
 

@@ -1,4 +1,7 @@
+using System;
 using GameProgramming3D.GUI;
+using GameProgramming3D.State;
+using GameProgramming3D.Exceptions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,30 +9,46 @@ namespace GameProgramming3D
 {
 	public class GUIManager : MonoBehaviour
 	{
-		private MessageConsole _messageConsole;
+		[SerializeField] private Dialog _dialogPrefab;
 
-		protected void Awake()
+		public SceneGUI SceneGUI { get; private set; }
+
+		private void OnEnable()
 		{
-			_messageConsole = GetComponentInChildren< MessageConsole >(true);
-
-			Unit.UnitSelected += HandleUnitSelected;
-			Unit.UnitDied += HandleUnitDied;
+			GameManager.Instance.StateManager.GameStateChanged += 
+				HandleGameStateChanged;
+			SceneGUI = FindObjectOfType<SceneGUI> ();
 		}
 
-		protected void OnDestroy()
+		private void OnDisable()
 		{
-			Unit.UnitSelected -= HandleUnitSelected;
-			Unit.UnitDied -= HandleUnitDied;
+			GameManager.Instance.StateManager.GameStateChanged -=
+				HandleGameStateChanged;
 		}
 
-		private void HandleUnitDied( Unit unit )
+		private void HandleGameStateChanged ( StateType type )
 		{
-			_messageConsole.AddText( string.Format( "Unit {0} died.", unit.name ) );
+			SceneGUI = FindObjectOfType<SceneGUI> ();
+			if(SceneGUI == null)
+			{
+				Debug.LogWarning ( "Could not find SceneGUI object from loaded scene. " +
+					"Is this intentional?" );
+			}
 		}
 
-		private void HandleUnitSelected( Unit unit )
+		public Dialog CreateDialog()
 		{
-			_messageConsole.AddText( "Unit " + unit.name + " selected." );
+			if(SceneGUI == null)
+			{
+				throw new StateGUINotFoundException ();
+			}
+
+			Dialog dialog = Instantiate ( _dialogPrefab );
+			dialog.transform.SetParent ( SceneGUI.transform );
+			dialog.transform.localPosition = Vector3.zero;
+			dialog.transform.SetAsLastSibling ();
+
+			return dialog;
 		}
 	}
 }
