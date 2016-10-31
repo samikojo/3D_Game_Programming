@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using GameProgramming3D.SaveLoad;
 using GameProgramming3D.State;
 using GameProgramming3D.GUI;
+using GameProgramming3D.Messages;
 using UnityEngine;
 
 namespace GameProgramming3D
@@ -71,6 +72,8 @@ namespace GameProgramming3D
 			}
 		}
 
+		public EventAggregator MessageBus { get; private set; }
+
 		public void PlayerLost ()
 		{
 			EndGame();
@@ -94,6 +97,7 @@ namespace GameProgramming3D
 			DontDestroyOnLoad( gameObject );
 			InitGameStateManager ();
 			InitInputManager ();
+			MessageBus = new EventAggregator ();
 		}
 
 		private void InitGameStateManager ()

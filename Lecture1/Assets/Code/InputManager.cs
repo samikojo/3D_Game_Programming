@@ -18,6 +18,14 @@ namespace GameProgramming3D
 		private CommandBase _rKeyCommand;
 		private CommandBase _pKeyCommand;
 
+		private MoveCameraCommand _moveCameraCommand;
+		private RotateCameraCommand _rotateCameraCommand;
+		private ZoomCameraCommand _zoomCameraCommand;
+
+		private bool _isMovingCamera = false;
+		private bool _isRotatingCamera = false;
+		private Vector3 _mousePosition;
+
 		public void Init()
 		{
 			SetDefaultCommands ();
@@ -35,16 +43,88 @@ namespace GameProgramming3D
 			_bButtonCommand = new MoveBarrelCommand();
 			_rKeyCommand = new SaveGameCommand ();
 			_pKeyCommand = new PauseCommand ();
+
+			_moveCameraCommand = new MoveCameraCommand ();
+			_rotateCameraCommand = new RotateCameraCommand ();
+			_zoomCameraCommand = new ZoomCameraCommand ();
 		}
 
 		protected void Update()
 		{
 			var unit = GameManager.Instance.SelectedUnit;
 
+			HandleCameraCommands ();
+
 			HandleKeyDown ( KeyCode.R, _rKeyCommand );
 			HandleKeyDown ( KeyCode.P, _pKeyCommand );
 
 			HandleUnitCommands ( unit );
+		}
+
+		private void HandleCameraCommands()
+		{
+			HandleMoveCamera ();
+			HandleRotateCamera ();
+			HandleZoomCamera ();
+		}
+
+		private void HandleZoomCamera ()
+		{
+			float mouseWheel = Input.GetAxis ( "Mouse ScrollWheel" );
+			if ( mouseWheel != 0 )
+			{
+				_zoomCameraCommand.Direction = mouseWheel < 0
+					? Messages.ZoomCameraMessage.ZoomDirection.Out
+					: Messages.ZoomCameraMessage.ZoomDirection.In;
+				_zoomCameraCommand.Execute ();
+			}
+		}
+
+		private void HandleRotateCamera ()
+		{
+			if ( _isRotatingCamera && Input.GetMouseButton ( 1 ) )
+			{
+				Vector3 mousePosition = Input.mousePosition;
+				Vector3 mouseDifference = _mousePosition - mousePosition;
+				_mousePosition = mousePosition;
+
+				_rotateCameraCommand.Amount = mouseDifference.x;
+				_rotateCameraCommand.Execute ();
+			}
+
+			if ( Input.GetMouseButtonDown ( 1 ) )
+			{
+				_isRotatingCamera = true;
+				_mousePosition = Input.mousePosition;
+			}
+
+			if ( Input.GetMouseButtonUp ( 1 ) )
+			{
+				_isRotatingCamera = false;
+			}
+		}
+
+		private void HandleMoveCamera ()
+		{
+			if ( _isMovingCamera && Input.GetMouseButton ( 0 ) )
+			{
+				Vector3 mousePosition = Input.mousePosition;
+				Vector3 mouseDifference = _mousePosition - mousePosition;
+				_mousePosition = mousePosition;
+				_moveCameraCommand.Amount = mouseDifference;
+				_moveCameraCommand.Execute ();
+			}
+
+			if ( Input.GetMouseButtonDown ( 0 ) )
+			{
+				_isMovingCamera = true;
+				_mousePosition = Input.mousePosition;
+			}
+
+			if ( Input.GetMouseButtonUp ( 0 ) )
+			{
+				_isMovingCamera = false;
+			}
 		}
 
 		private void HandleUnitCommands ( Unit unit )
