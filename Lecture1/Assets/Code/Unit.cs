@@ -3,6 +3,7 @@ using GameProgramming3D.SaveLoad;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using GameProgramming3D.GUI;
 
 namespace GameProgramming3D
 {
@@ -15,6 +16,8 @@ namespace GameProgramming3D
 
 		public static event System.Action< Unit > UnitSelected;
 		public static event System.Action< Unit > UnitDied;
+
+		public event System.Action<int> DamageTaken;
 
 		[SerializeField] private float _speed;
 		[SerializeField] private int _health = 10;
@@ -32,6 +35,7 @@ namespace GameProgramming3D
 		protected float RotationAmount { get; set; }
 		public Player AssociatedPlayer { get; protected set; }
 		public bool IsAlive { get; protected set; }
+		protected UnitGUI GUI { get; set; }
 
 		public int Health
 		{
@@ -88,6 +92,8 @@ namespace GameProgramming3D
 		{
 			IsAlive = true;
 			AssociatedPlayer = player;
+			GUI = GetComponentInChildren< UnitGUI >();
+			GUI.Init( this );
 		}
 
 		protected void OnUnitSelected()
@@ -101,6 +107,11 @@ namespace GameProgramming3D
 		public void TakeDamage(float amount)
 		{
 			_health = Mathf.Max( 0, _health - Mathf.RoundToInt( amount ) );
+			if(DamageTaken != null)
+			{
+				DamageTaken ( _health );
+			}
+
 			if ( _health == 0 )
 			{
 				Die();
