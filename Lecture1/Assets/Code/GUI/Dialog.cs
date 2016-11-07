@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using DG.Tweening;
 
 namespace GameProgramming3D.GUI
 {
@@ -36,6 +37,22 @@ namespace GameProgramming3D.GUI
 		/// </summary>
 		public void Show()
 		{
+			int screenWidth = Screen.width;
+			Vector3 position = transform.localPosition;
+			position.x -= ( screenWidth / 2 +
+				_background.rectTransform.rect.width / 2 );
+			transform.localPosition = position;
+
+			var tweener = DOTween.To(() => 
+				transform.localPosition, 
+				(value) => transform.localPosition = value,
+				Vector3.zero,
+				0.5f
+				);
+
+			tweener.SetEase ( Ease.InOutCubic );
+			tweener.SetUpdate ( true );
+			
 			gameObject.SetActive ( true );
 		}
 
@@ -96,15 +113,29 @@ namespace GameProgramming3D.GUI
 		public void CloseDialog(System.Action dialogClosedDelegate = null,
 			bool destroyAfterClose = true)
 		{
-			OnDialogClosed ( dialogClosedDelegate );
-			if(destroyAfterClose)
+			int screenWidth = Screen.width;
+			Vector3 position = transform.localPosition;
+			position.x += screenWidth / 2 +
+				_background.rectTransform.rect.width / 2;
+			var tweener = DOTween.To (
+				() => transform.localPosition,
+				( value ) => transform.localPosition = value,
+				position, 0.5f );
+			tweener.SetEase ( Ease.InOutCubic );
+			tweener.SetUpdate ( true );
+			tweener.OnComplete ( () => 
 			{
-				Destroy ( gameObject );
-			}
-			else
-			{
-				gameObject.SetActive ( false );
-			}
+				OnDialogClosed ( dialogClosedDelegate );
+				if ( destroyAfterClose )
+				{
+					Destroy ( gameObject );
+				}
+				else
+				{
+					gameObject.SetActive ( false );
+					transform.localPosition = Vector3.zero;
+				}
+			} );
 		}
 
 		public void SetOnOKClicked( System.Action dialogClosedDelegate = null,

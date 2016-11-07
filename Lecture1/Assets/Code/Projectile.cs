@@ -10,15 +10,20 @@ namespace GameProgramming3D
 		[SerializeField] private float _explosionForce;
 		[SerializeField] private GameObject _explosionEffect;
 
+		public Rigidbody Rigidbody { get { return _rigidbody; } }
+
 		private Rigidbody _rigidbody;
+		private IShooter _shooter;
 
 		protected void Awake()
 		{
 			_rigidbody = gameObject.GetOrAddComponent<Rigidbody> ();
 		}
 
-		public void Shoot(Vector3 force)
+		public void Shoot(Vector3 force, IShooter shooter)
 		{
+			_shooter = shooter;
+			gameObject.SetActive ( true );
 			_rigidbody.AddForce ( force, ForceMode.Impulse );
 		}
 
@@ -26,13 +31,12 @@ namespace GameProgramming3D
 		{
 			Explode ();
 		}
-
-		// TODO: Pool projectiles.
+		
 		private void Explode()
 		{
 			ApplyDamage ();
 			InstantiateEffect ();
-			Destroy ( gameObject );
+			_shooter.ProjectileHit( this );
 		}
 
 		private void InstantiateEffect()

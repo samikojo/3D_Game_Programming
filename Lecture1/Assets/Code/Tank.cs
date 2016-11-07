@@ -1,8 +1,9 @@
+using GameProgramming3D.Utility;
 using UnityEngine;
 
 namespace GameProgramming3D
 {
-	public class Tank : Vehicle
+	public class Tank : Vehicle, IShooter
 	{
 		[SerializeField] private GameObject _selectionCircle;
 		[SerializeField] private Transform _shootingStartPoint;
@@ -15,11 +16,15 @@ namespace GameProgramming3D
 
 		private TankMovementController _movementController;
 
+		//private ObjectPool _projectilePool;
+		private ProjectilePool _projectilePool;
+
 		public override void Init ( Player player )
 		{
 			base.Init ( player );
 			_movementController =
 				gameObject.GetOrAddComponent<TankMovementController> ();
+			_projectilePool = GetComponent< ProjectilePool >();
 		}
 
 		public override void Select( bool isSelected )
@@ -40,10 +45,16 @@ namespace GameProgramming3D
 
 		public override void Shoot ()
 		{
-			var projectile = Instantiate ( _projectilePrefab );
+			//var projectile = Instantiate ( _projectilePrefab );
+			Projectile projectile = _projectilePool.GetPooledObject();
 			projectile.transform.position = _shootingStartPoint.position;
 			var shootingDirection = _shootingStartPoint.forward;
-			projectile.Shoot ( shootingDirection * _shootingForce );
+			projectile.Shoot ( shootingDirection * _shootingForce, this );
+		}
+
+		public void ProjectileHit( Projectile projectile )
+		{
+			_projectilePool.ReturnObjectToPool( projectile );
 		}
 
 		public override void Die ()
