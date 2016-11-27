@@ -946,7 +946,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _guiManagerPrefab: {fileID: 11477884, guid: 528ddfe18b64bf649bdad1207b5238ca, type: 2}
-  _turnTime: 45
+  _turnTime: 10
 --- !u!4 &1207647240
 Transform:
   m_ObjectHideFlags: 0

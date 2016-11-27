@@ -27,7 +27,7 @@ namespace GameProgramming3D.GUI
 			}
 		}
 
-		private void HandleDamageTaken ( int health )
+		private void HandleDamageTaken ( Unit unit, int health )
 		{
 			_healthBar.SetHealth ( health );
 		}

@@ -204,6 +204,7 @@ namespace GameProgramming3D
 		{
 			StateManager.GameStateChanged -= GameStarted;
 			InitPlayers ();
+			InitGUI();
 			ChangeTurn ();
 		}
 
@@ -213,8 +214,14 @@ namespace GameProgramming3D
 
 			InitPlayers ();
 			LoadGameData ();
+			InitGUI();
 			SelectedUnit = ActivePlayer.UnitInTurn;
 			TurnTimer.StartTimer ();
+		}
+
+		private void InitGUI()
+		{
+			GUIManager.SceneGUI.Init();
 		}
 
 		private void LoadGameData()

@@ -5,5 +5,6 @@ namespace GameProgramming3D.GUI
 {
 	public class SceneGUI : MonoBehaviour
 	{
+		public virtual void Init () { }
 	}
 }

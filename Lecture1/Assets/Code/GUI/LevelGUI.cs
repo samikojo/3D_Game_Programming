@@ -6,10 +6,14 @@ namespace GameProgramming3D.GUI
 	public class LevelGUI : SceneGUI
 	{
 		private MessageConsole _messageConsole;
+		private TotalHealths _totalHealths;
 
-		protected void Awake ()
+		public override void Init ()
 		{
 			_messageConsole = GetComponentInChildren<MessageConsole> ( true );
+			_totalHealths = GetComponentInChildren<TotalHealths> ( true );
+
+			_totalHealths.Init( GameManager.Instance.AllPlayers );
 
 			Unit.UnitSelected += HandleUnitSelected;
 			Unit.UnitDied += HandleUnitDied;

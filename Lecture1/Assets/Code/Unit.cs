@@ -17,7 +17,7 @@ namespace GameProgramming3D
 		public static event System.Action< Unit > UnitSelected;
 		public static event System.Action< Unit > UnitDied;
 
-		public event System.Action<int> DamageTaken;
+		public event System.Action<Unit, int> DamageTaken;
 
 		[SerializeField] private float _speed;
 		[SerializeField] private int _health = 10;
@@ -109,7 +109,7 @@ namespace GameProgramming3D
 			_health = Mathf.Max( 0, _health - Mathf.RoundToInt( amount ) );
 			if(DamageTaken != null)
 			{
-				DamageTaken ( _health );
+				DamageTaken ( this, _health );
 			}
 
 			if ( _health == 0 )

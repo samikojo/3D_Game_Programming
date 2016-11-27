@@ -12,6 +12,8 @@ namespace GameProgramming3D
 
 		public int Id { get { return _id; } }
 
+		public Unit[] Units { get { return _units; } }
+
 		public Unit UnitInTurn
 		{
 			get
@@ -53,11 +55,14 @@ namespace GameProgramming3D
 	
 		public void StartTurn()
 		{
-			_unitIndex++;
-			if(_unitIndex >= _units.Length)
+			do
 			{
-				_unitIndex = 0;
-			}
+				_unitIndex++;
+				if ( _unitIndex >= _units.Length )
+				{
+					_unitIndex = 0;
+				}
+			} while ( !UnitInTurn.IsAlive );
 			GameManager.Instance.SelectedUnit = UnitInTurn;
 		}
 

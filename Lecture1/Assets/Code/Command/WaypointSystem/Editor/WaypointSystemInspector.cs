@@ -1,0 +1,33 @@
+using UnityEngine;
+using UE = UnityEditor;
+using System.Collections;
+using WS = GameProgramming3D.WaypointSystem;
+
+namespace GameProgramming3D.Editor
+{
+	[UE.CustomEditor(typeof(WS.WaypointSystem))]
+	public class WaypointSystemInspector : UE.Editor
+	{
+		private WS.WaypointSystem _target;
+
+		protected void OnEnable()
+		{
+			_target = target as WS.WaypointSystem;
+		}
+
+		public override void OnInspectorGUI ()
+		{
+			base.OnInspectorGUI ();
+
+			if( GUILayout.Button("Add waypoint"))
+			{
+				int waypointCount = _target.transform.childCount;
+				string waypointName =
+					string.Format ( "Waypoint{0}", ( waypointCount + 1 ).ToString ( "D3" ) );
+				GameObject waypoint = new GameObject ( waypointName );
+				waypoint.AddComponent<WS.Waypoint> ();
+				waypoint.transform.SetParent ( _target.transform );
+			}
+		}
+	}
+}

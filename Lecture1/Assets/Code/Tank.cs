@@ -60,7 +60,8 @@ namespace GameProgramming3D
 		public override void Die ()
 		{
 			IsAlive = false;
-			gameObject.SetActive( false );
+			//gameObject.SetActive( false );
+			DestroyTank();
 			AssociatedPlayer.UnitKilled();
 			OnUnitDied ();
 		}
@@ -77,6 +78,17 @@ namespace GameProgramming3D
 				_minBarrelAngle, _maxBarrelAngle );
 
 			_barrel.localEulerAngles = barrelRotation;
+		}
+
+		private void DestroyTank()
+		{
+			TankDestroyer[] tankDestroyers = GetComponentsInChildren< TankDestroyer >();
+			foreach ( var tankDestroyer in tankDestroyers )
+			{
+				tankDestroyer.Init();
+				tankDestroyer.Rigidbody.AddExplosionForce( 10, transform.position, 
+					5, 0, ForceMode.Impulse );
+			}
 		}
 	}
 }
