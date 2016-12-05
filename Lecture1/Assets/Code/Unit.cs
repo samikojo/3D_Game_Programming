@@ -4,9 +4,19 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using GameProgramming3D.GUI;
+using GameProgramming3D.Utility;
 
 namespace GameProgramming3D
 {
+	[Flags]
+	public enum UnitBooster
+	{
+		DoubleDamage = 1, // 0001 (1)
+		DoubleSpeed = 1 << 1, // 0010 (2)
+		TripleArmor = 1 << 2, // 0100 (4)
+		Immortality = 1 << 3 // 1000 (8)
+	}
+
 	public abstract class Unit : MonoBehaviour, IDamageReceiver
 	{
 		public static Color NormalColor = Color.white;
@@ -23,6 +33,8 @@ namespace GameProgramming3D
 		[SerializeField] private int _health = 10;
 		[SerializeField] private float _rotationSpeed;
 		[SerializeField] private int _id;
+		
+		[SerializeField, EnumFlag("Boosters")] private UnitBooster _boosters;
 
 		private Renderer _renderer;
 
@@ -36,6 +48,12 @@ namespace GameProgramming3D
 		public Player AssociatedPlayer { get; protected set; }
 		public bool IsAlive { get; protected set; }
 		protected UnitGUI GUI { get; set; }
+
+		public UnitBooster Boosters
+		{
+			get { return _boosters; }
+			set { _boosters = value; }
+		}
 
 		public int Health
 		{
