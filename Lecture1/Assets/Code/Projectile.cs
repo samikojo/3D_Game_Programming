@@ -11,6 +11,7 @@ namespace GameProgramming3D
 		[SerializeField] private GameObject _explosionEffect;
 
 		public Rigidbody Rigidbody { get { return _rigidbody; } }
+		public float ExplosionDamage { get { return _explosionDamage; } }
 
 		private Rigidbody _rigidbody;
 		private IShooter _shooter;

@@ -13,7 +13,7 @@ GameObject:
   - 23: {fileID: 2352186}
   - 54: {fileID: 5492004}
   - 114: {fileID: 11445080}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ GameObject:
   - 4: {fileID: 441942}
   - 198: {fileID: 19814048}
   - 199: {fileID: 19982104}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fx_OilTrailHIGH_Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
