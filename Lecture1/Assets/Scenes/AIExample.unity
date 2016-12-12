@@ -498,6 +498,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _queueCommands: 1
+--- !u!114 &943070250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 943070245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac28fcb2b2bc4524fad08bbf8a70b91f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectAmount: 1
+  _objectPrefab: {fileID: 11445080, guid: becf3ee9fdab6774a9c0c33d732579c8, type: 2}
+  _shouldGrow: 0
+--- !u!114 &943070251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 943070245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 765d27343426a8542a9d1d7cf983c90d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shootingForce: 100
 --- !u!4 &954571990 stripped
 Transform:
   m_PrefabParentObject: {fileID: 489214, guid: 7f0a0bcb412898b449c11dce62fbdb9a, type: 2}

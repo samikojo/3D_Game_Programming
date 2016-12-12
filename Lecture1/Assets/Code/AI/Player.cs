@@ -48,6 +48,21 @@ namespace GameProgramming3D.AI
 				}
 			}
 
+			if(Input.GetMouseButtonDown(1))
+			{
+				Ray ray = Camera.main.ScreenPointToRay ( Input.mousePosition );
+				RaycastHit hit;
+				int layerMask = Flags.CreateMask ( LayerMask.NameToLayer ( "Ground" ),
+					LayerMask.NameToLayer ( "Enemy" ) );
+				if(Physics.Raycast(ray, out hit, 100f, layerMask))
+				{
+					Vector3 shootPosition = hit.point;
+					ShootCommand shootCommand = new ShootCommand ( this, shootPosition,
+						_shootingInterval, _shootingPoint );
+					_commandSystem.AddCommand ( shootCommand );
+				}
+			}
+
 			float vertical = Input.GetAxis ( "Vertical" );
 			float horizontal = Input.GetAxis ( "Horizontal" );
 			Vector3 position = Position;
