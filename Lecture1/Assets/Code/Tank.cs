@@ -43,6 +43,11 @@ namespace GameProgramming3D
 			ResetMovement ();
 		}
 
+		public void Shoot(Vector3 position)
+		{
+			Shoot ();
+		}
+
 		public override void Shoot ()
 		{
 			//var projectile = Instantiate ( _projectilePrefab );

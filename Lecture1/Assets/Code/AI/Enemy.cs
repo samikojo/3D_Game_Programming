@@ -88,6 +88,11 @@ namespace GameProgramming3D.AI
 			projectile.Shoot ( shootingDirection * _shootingForce, this );
 		}
 
+		public void Shoot(Vector3 position)
+		{
+			Shoot ();
+		}
+
 		public void PerformTransition(AIStateTransition transition)
 		{
 			AIStateType targetStateType = CurrentState.GetTargetStateType ( transition );

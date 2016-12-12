@@ -1,16 +1,23 @@
 using UnityEngine;
-using System.Collections;
-using System;
+using GameProgramming3D.WaypointSystem;
+using GameProgramming3D.Utility;
 
 namespace GameProgramming3D.AI
 {
+	[RequireComponent(typeof(Health), typeof(CommandSystem), typeof(Mover))]
 	public class Player : MonoBehaviour
 	{
 		[SerializeField] private float _speed;
 		[SerializeField] private Health _health;
+		[SerializeField] private Transform _shootingPoint;
+		[SerializeField] private float _shootingInterval;
+		[SerializeField] private CommandSystem _commandSystem;
 
 		public Vector3 Position { get { return transform.position; } }
 		public Health Health { get { return _health; } }
+		public Transform ShootingPoint { get { return _shootingPoint; } }
+		public Mover Mover { get; private set; }
+		public Shooter Shooter { get; private set; }
 
 		protected void Awake()
 		{
@@ -18,10 +25,29 @@ namespace GameProgramming3D.AI
 			{
 				_health = gameObject.GetOrAddComponent<Health> ();
 			}
+
+			Mover = gameObject.GetOrAddComponent< Mover >();
+			Mover.Init( GetComponentInChildren<Collider>(), _speed, Direction.Forward );
+			_commandSystem = gameObject.GetOrAddComponent<CommandSystem> ();
+			Shooter = gameObject.GetOrAddComponent<Shooter> ();
+			Shooter.Init ( ShootingPoint );
 		}
 
 		protected void Update()
 		{
+			if(Input.GetMouseButtonDown(0))
+			{
+				Ray ray = Camera.main.ScreenPointToRay ( Input.mousePosition );
+				RaycastHit hit;
+				int layerMask = Flags.CreateMask ( LayerMask.NameToLayer ( "Ground" ) );
+				if( Physics.Raycast(ray, out hit, 100f, layerMask) )
+				{
+					Vector3 movePosition = hit.point;
+					MoveCommand moveCommand = new MoveCommand ( this, movePosition );
+					_commandSystem.AddCommand ( moveCommand );
+				}
+			}
+
 			float vertical = Input.GetAxis ( "Vertical" );
 			float horizontal = Input.GetAxis ( "Horizontal" );
 			Vector3 position = Position;
